@@ -65,7 +65,7 @@ function generateRandomArray(size) {
 	}
 
 	array = shuffle(array);
-	document.body.lastElementChild.innerHTML = array.join(' ');
+	document.getElementById('rectangles_container').innerHTML = array.join(' ');
 }
 
 async function bubbleSort(time = 0.001) {
