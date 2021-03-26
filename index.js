@@ -68,7 +68,7 @@ function generateRandomArray(size) {
 	document.getElementById('rectangles_container').innerHTML = array.join(' ');
 }
 
-async function bubbleSort(time = 0.001) {
+async function bubbleSort() {
 	let rectangles_array = document.getElementsByClassName('rectangle');
 	let switched = true;
 
@@ -92,7 +92,11 @@ async function bubbleSort(time = 0.001) {
 					selected_element_id,
 					compared_element_id
 				);
-				await sleep(10);
+				a = document.getElementById('speed_slider');
+
+				await sleep(
+					parseInt(document.getElementById('speed_slider').value)
+				);
 				if (switched) {
 					tmp_id = compared_element_id;
 					compared_element_id = selected_element_id;
