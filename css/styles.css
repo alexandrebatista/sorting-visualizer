@@ -1,0 +1,22 @@
+.rectangles_container {
+	display: flex;
+	flex-direction: row;
+}
+
+.rectangle {
+	background-color: black;
+	height: 100px;
+	width: 0.5%;
+}
+
+.selected_element {
+	background-color: green;
+}
+
+.compared_element {
+	background-color: yellow;
+}
+
+.disordered_element {
+	background-color: red;
+}
