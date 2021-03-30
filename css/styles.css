@@ -1,5 +1,19 @@
 /* ------ */
 
+.content {
+	max-width: 50%;
+	margin-left: 25%;
+	margin-right: 25%;
+}
+
+.menu {
+	flex-direction: row;
+}
+
+.sort_status {
+	display: none;
+}
+
 .rectangles_container {
 	display: flex;
 	flex-direction: row;

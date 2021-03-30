@@ -24,10 +24,10 @@ function sleep(ms) {
 
 function switchRectangles(selected_element, compared_element) {
 	if (parseInt(selected_element.id) <= parseInt(compared_element.id)) {
-		compared_element.className += ' compared_element';
+		compared_element.classList.add('compared_element');
 		return false;
 	} else {
-		compared_element.className += ' disordered_element';
+		compared_element.classList.add('disordered_element');
 
 		let tmp_id = compared_element.id;
 		let tmp_height = compared_element.style.height;
@@ -42,10 +42,53 @@ function switchRectangles(selected_element, compared_element) {
 	}
 }
 
+function removeLastClass(element) {
+	element.classList.remove(element.classList[element.classList.length - 1]);
+}
+
+// Sorting Waiting Control
+
+async function wait() {
+	if (checkStopSorting()) {
+		return true;
+	}
+	await sleep(5000 / parseInt(document.getElementById('speed_slider').value));
+	if (checkStopSorting()) {
+		return true;
+	}
+	return false;
+}
+
+// Sorting Control
+
+function startSorting() {
+	document.getElementById('sort_button').disabled = true;
+	document.getElementById('sort_status').innerHTML = 'sorting';
+}
+
+function stopSorting() {
+	document.getElementById('sort_button').disabled = false;
+	document.getElementById('sort_status').innerHTML = 'not_sorted';
+}
+
+function checkStopSorting() {
+	if (document.getElementById('sort_status').innerHTML == 'not_sorted') {
+		return true;
+	}
+	return false;
+}
+
+function finishSorting() {
+	document.getElementById('sort_button').disabled = false;
+	document.getElementById('sort_status').innerHTML = 'sorted';
+}
+
 // ---------------------------------
 
 function generateRandomArray(size) {
 	let array = [];
+
+	stopSorting();
 
 	for (let i = 0; i < size; i++) {
 		array.push(
@@ -61,24 +104,24 @@ function generateRandomArray(size) {
 
 async function bubbleSort() {
 	let rectangles_array = document.getElementsByClassName('rectangle');
+	startSorting();
 
 	for (let i = 0; i < rectangles_array.length; i++) {
 		let selected_element = rectangles_array[i];
-		let selected_element_oldclass = selected_element.className;
-
-		selected_element.className += ' selected_element';
+		selected_element.classList.add('selected_element');
 
 		for (let j = i + 1; j < rectangles_array.length; j++) {
 			let compared_element = rectangles_array[j];
-			let compared_element_oldclass = compared_element.className;
 
 			switchRectangles(selected_element, compared_element);
 
-			await sleep(
-				parseInt(document.getElementById('speed_slider').value)
-			);
-			compared_element.className = compared_element_oldclass;
+			if (await wait()) {
+				return 0;
+			}
+
+			removeLastClass(compared_element);
 		}
-		selected_element.className = selected_element_oldclass;
+		removeLastClass(selected_element);
 	}
+	finishSorting();
 }

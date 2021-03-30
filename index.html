@@ -4,23 +4,40 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="stylesheet" href="css/styles.css" />
+		<link rel="stylesheet" href="css/dropdown.css" />
 		<script src="index.js"></script>
 	</head>
 	<body>
-		<button type="button" onclick="generateRandomArray(100)">
-			Generate Array
-		</button>
-		<button type="button" onclick="bubbleSort()">Bubble Sort</button>
-		<div class="slidecontainer">
-			<input
-				type="range"
-				min="1"
-				max="100"
-				value="50"
-				class="slider"
-				id="speed_slider"
-			/>
+		<div class="content">
+			<div class="menu">
+				<div class="dropdown">
+					<button class="dropbtn">Dropdown</button>
+					<div class="dropdown-content">
+						<a href="#">Link 1</a>
+						<a href="#">Link 2</a>
+						<a href="#">Link 3</a>
+					</div>
+				</div>
+				<div class="slidecontainer">
+					<input
+						type="range"
+						min="100"
+						max="100000"
+						value="500"
+						class="slider"
+						id="speed_slider"
+					/>
+				</div>
+				<button type="button" onclick="generateRandomArray(100)">
+					Generate Array
+				</button>
+				<button type="button" id="sort_button" onclick="bubbleSort()">
+					Bubble Sort
+					<div class="sort_status" id="sort_status">not_sorted</div>
+				</button>
+			</div>
+
+			<div class="rectangles_container" id="rectangles_container"></div>
 		</div>
-		<div class="rectangles_container" id="rectangles_container"></div>
 	</body>
 </html>
