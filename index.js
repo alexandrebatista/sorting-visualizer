@@ -22,10 +22,9 @@ function sleep(ms) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function switchRectangles(selected_element, compared_element) {
+async function switchRectangles(selected_element, compared_element) {
 	if (parseInt(selected_element.id) <= parseInt(compared_element.id)) {
 		compared_element.classList.add('compared_element');
-		return false;
 	} else {
 		compared_element.classList.add('disordered_element');
 
@@ -37,9 +36,12 @@ function switchRectangles(selected_element, compared_element) {
 
 		selected_element.style.height = tmp_height;
 		selected_element.id = tmp_id;
+	}
 
+	if (await wait()) {
 		return true;
 	}
+	removeLastClass(compared_element);
 }
 
 function removeLastClass(element) {
@@ -85,8 +87,9 @@ function finishSorting() {
 
 // ---------------------------------
 
-function generateRandomArray(size) {
+function generateRandomArray() {
 	let array = [];
+	const size = document.getElementById('size_slider').value;
 
 	stopSorting();
 
@@ -102,7 +105,14 @@ function generateRandomArray(size) {
 	document.getElementById('rectangles_container').innerHTML = array.join(' ');
 }
 
-async function bubbleSort() {
+function test() {
+	const selectElement = document.getElementById('size_slider');
+	selectElement.addEventListener('change', (event) => {
+		generateRandomArray();
+	});
+}
+
+async function selectionSort() {
 	let rectangles_array = document.getElementsByClassName('rectangle');
 	startSorting();
 
@@ -112,14 +122,9 @@ async function bubbleSort() {
 
 		for (let j = i + 1; j < rectangles_array.length; j++) {
 			let compared_element = rectangles_array[j];
-
-			switchRectangles(selected_element, compared_element);
-
-			if (await wait()) {
+			if (await switchRectangles(selected_element, compared_element)) {
 				return 0;
 			}
-
-			removeLastClass(compared_element);
 		}
 		removeLastClass(selected_element);
 	}
