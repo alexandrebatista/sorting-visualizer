@@ -23,6 +23,7 @@ function sleep(ms) {
 }
 
 async function switchRectangles(selected_element, compared_element) {
+	let swap = 0;
 	if (parseInt(selected_element.id) <= parseInt(compared_element.id)) {
 		compared_element.classList.add('compared_element');
 	} else {
@@ -36,12 +37,15 @@ async function switchRectangles(selected_element, compared_element) {
 
 		selected_element.style.height = tmp_height;
 		selected_element.id = tmp_id;
+		swap = 1;
 	}
 
 	if (await wait()) {
-		return true;
+		return -1;
+	} else {
+		removeLastClass(compared_element);
+		return swap;
 	}
-	removeLastClass(compared_element);
 }
 
 function removeLastClass(element) {
@@ -105,28 +109,68 @@ function generateRandomArray() {
 	document.getElementById('rectangles_container').innerHTML = array.join(' ');
 }
 
-function test() {
+function defineSizeSlider() {
 	const selectElement = document.getElementById('size_slider');
 	selectElement.addEventListener('change', (event) => {
 		generateRandomArray();
 	});
 }
 
-async function selectionSort() {
+async function algorithmSelection() {
+	const algorithm = document.getElementById('algorithm').value;
 	let rectangles_array = document.getElementsByClassName('rectangle');
-	startSorting();
 
+	startSorting();
+	switch (algorithm) {
+		case 'Bubble':
+			await bubbleSort(rectangles_array);
+			break;
+		case 'Selection':
+			await selectionSort(rectangles_array);
+			break;
+		default:
+			break;
+	}
+	finishSorting();
+}
+
+async function bubbleSort(rectangles_array) {
+	let swap = true;
+	let iterations = 0;
+
+	while (swap == true) {
+		swap = false;
+		for (let i = 0; i < rectangles_array.length - 1 - iterations; i++) {
+			let selected_element = rectangles_array[i];
+			selected_element.classList.add('selected_element');
+			let compared_element = rectangles_array[i + 1];
+			result = await switchRectangles(selected_element, compared_element);
+
+			if (result == -1) {
+				return 0;
+			} else if (result == 1) {
+				swap = true;
+			}
+			removeLastClass(selected_element);
+		}
+		iterations += 1;
+	}
+}
+
+async function selectionSort(rectangles_array) {
 	for (let i = 0; i < rectangles_array.length; i++) {
 		let selected_element = rectangles_array[i];
 		selected_element.classList.add('selected_element');
 
 		for (let j = i + 1; j < rectangles_array.length; j++) {
 			let compared_element = rectangles_array[j];
-			if (await switchRectangles(selected_element, compared_element)) {
+			if (
+				(await switchRectangles(selected_element, compared_element)) ==
+				-1
+			) {
 				return 0;
 			}
 		}
 		removeLastClass(selected_element);
 	}
-	finishSorting();
 }

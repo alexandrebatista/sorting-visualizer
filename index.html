@@ -10,14 +10,10 @@
 	<body>
 		<div class="content">
 			<div class="menu">
-				<div class="dropdown">
-					<button class="dropbtn">Dropdown</button>
-					<div class="dropdown-content">
-						<a href="#">Link 1</a>
-						<a href="#">Link 2</a>
-						<a href="#">Link 3</a>
-					</div>
-				</div>
+				<select id="algorithm">
+					<option value="Bubble">Bubble Sort</option>
+					<option value="Selection">Selection Sort</option>
+				</select>
 				<div>
 					Speed
 					<div class="slidecontainer">
@@ -46,7 +42,7 @@
 					</div>
 				</div>
 				<script>
-					test();
+					defineSizeSlider();
 				</script>
 				<button type="button" onclick="generateRandomArray()">
 					Generate Array
@@ -54,7 +50,7 @@
 				<button
 					type="button"
 					id="sort_button"
-					onclick="selectionSort()"
+					onclick="algorithmSelection()"
 				>
 					Sort
 					<div class="sort_status" id="sort_status">not_sorted</div>
