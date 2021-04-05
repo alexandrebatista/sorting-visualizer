@@ -52,6 +52,59 @@ function removeLastClass(element) {
 	element.classList.remove(element.classList[element.classList.length - 1]);
 }
 
+async function merge(rectangles_array, begin, middle, end) {
+	let correct_order = [];
+
+	for (
+		let index_first_half = begin, index_second_half = middle;
+		index_first_half < middle || index_second_half < end;
+
+	) {
+		if (index_first_half < middle && index_second_half < end) {
+			if (
+				parseInt(rectangles_array[index_first_half].id) <
+				parseInt(rectangles_array[index_second_half].id)
+			) {
+				correct_order.push({
+					id: rectangles_array[index_first_half].id,
+					height: rectangles_array[index_first_half].style.height,
+				});
+				index_first_half++;
+			} else {
+				correct_order.push({
+					id: rectangles_array[index_second_half].id,
+					height: rectangles_array[index_second_half].style.height,
+				});
+				index_second_half++;
+			}
+		} else {
+			if (index_first_half < middle) {
+				correct_order.push({
+					id: rectangles_array[index_first_half].id,
+					height: rectangles_array[index_first_half].style.height,
+				});
+				index_first_half++;
+			} else {
+				correct_order.push({
+					id: rectangles_array[index_second_half].id,
+					height: rectangles_array[index_second_half].style.height,
+				});
+				index_second_half++;
+			}
+		}
+	}
+
+	for (let index = begin; index < end; index++) {
+		const selected_element = rectangles_array[index];
+		selected_element.classList.add('selected_element');
+		await wait();
+		const correct_element = correct_order[index - begin];
+		selected_element.style.height = correct_element.height;
+		selected_element.id = correct_element.id;
+		removeLastClass(selected_element);
+	}
+}
+
 // Sorting Waiting Control
 
 async function wait() {
@@ -125,6 +178,9 @@ async function algorithmSelection() {
 		case 'Bubble':
 			await bubbleSort(rectangles_array);
 			break;
+		case 'Merge':
+			await mergeSort(rectangles_array, 0, rectangles_array.length);
+			break;
 		case 'Selection':
 			await selectionSort(rectangles_array);
 			break;
@@ -154,6 +210,17 @@ async function bubbleSort(rectangles_array) {
 			removeLastClass(selected_element);
 		}
 		iterations += 1;
+	}
+}
+
+async function mergeSort(rectangles_array, begin, end) {
+	debugger;
+	if (end - begin > 1) {
+		const middle = parseInt((begin + end) / 2);
+
+		await mergeSort(rectangles_array, begin, middle);
+		await mergeSort(rectangles_array, middle, end);
+		await merge(rectangles_array, begin, middle, end);
 	}
 }
 
