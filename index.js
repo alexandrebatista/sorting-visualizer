@@ -153,12 +153,17 @@ function generateRandomArray() {
 	const size = document.getElementById('size_slider').value;
 	const maxSize = parseInt(document.getElementById('size_slider').max);
 
+	const windowHeight =
+		window.innerHeight ||
+		document.documentElement.clientHeight ||
+		document.body.clientHeight;
+
 	stopSorting();
 
 	for (let i = 0; i < size; i++) {
 		array.push(
 			`<div id="${i}" class="rectangle" style="height: ${
-				(10 + 10 * i) * (75 / size)
+				(10 + 10 * i) * 45000 * (1 / size) * (1 / windowHeight)
 			}px; width: ${maxSize / size}%"></div>`
 		);
 	}
