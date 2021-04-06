@@ -97,12 +97,16 @@ async function merge(rectangles_array, begin, middle, end) {
 	for (let index = begin; index < end; index++) {
 		const selected_element = rectangles_array[index];
 		selected_element.classList.add('selected_element');
-		await wait();
+		if (await wait()) {
+			removeLastClass(selected_element);
+			return true;
+		}
 		const correct_element = correct_order[index - begin];
 		selected_element.style.height = correct_element.height;
 		selected_element.id = correct_element.id;
 		removeLastClass(selected_element);
 	}
+	return false;
 }
 
 // Sorting Waiting Control
@@ -153,7 +157,7 @@ function generateRandomArray() {
 	for (let i = 0; i < size; i++) {
 		array.push(
 			`<div id="${i}" class="rectangle" style="height: ${
-				10 + 10 * i
+				1 + 1 * i
 			}px"></div>`
 		);
 	}
@@ -214,14 +218,17 @@ async function bubbleSort(rectangles_array) {
 }
 
 async function mergeSort(rectangles_array, begin, end) {
-	debugger;
 	if (end - begin > 1) {
 		const middle = parseInt((begin + end) / 2);
 
 		await mergeSort(rectangles_array, begin, middle);
 		await mergeSort(rectangles_array, middle, end);
-		await merge(rectangles_array, begin, middle, end);
+		result = await merge(rectangles_array, begin, middle, end);
+		if (result === true) {
+			return true;
+		}
 	}
+	return false;
 }
 
 async function selectionSort(rectangles_array) {

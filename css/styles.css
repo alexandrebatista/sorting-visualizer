@@ -13,26 +13,29 @@ button {
 }
 
 /* ------ */
-.external_container {
-	margin: 0;
+.center_row {
+	display: flex;
+	justify-content: center;
 }
 
-.content {
-	text-align: center;
+.center_column {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+}
+
+.external_container {
+	margin: 0;
 }
 
 .menu_container {
 	height: 80px;
 	background-color: rgb(0, 51, 102);
-	display: flex;
-	justify-content: center;
 }
 
 .menu {
-	display: flex;
 	justify-content: space-between;
 	width: 40%;
-	flex-direction: row;
 }
 
 .slide_container {
@@ -51,15 +54,13 @@ button {
 }
 
 .rectangles_container {
-	display: flex;
-	flex-direction: row;
-	text-align: center;
+	width: 75%;
 }
 
 .rectangle {
 	background-color: black;
 	height: 100px;
-	width: 0.5%;
+	width: 1%;
 }
 
 .selected_element {
