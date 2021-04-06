@@ -6,55 +6,60 @@
 		<link rel="stylesheet" href="css/styles.css" />
 		<script src="index.js"></script>
 	</head>
-	<body>
+	<body class="external_container">
 		<div class="content">
-			<div class="menu">
-				<select id="algorithm">
-					<option value="Bubble">Bubble Sort</option>
-					<option value="Merge">Merge Sort</option>
-					<option value="Selection">Selection Sort</option>
-				</select>
-				<div>
-					Speed
-					<div class="slidecontainer">
-						<input
-							type="range"
-							min="100"
-							max="1000"
-							value="500"
-							class="slider"
-							id="speed_slider"
-						/>
+			<div class="menu_container">
+				<div class="menu">
+					<select id="algorithm">
+						<option value="Bubble">Bubble Sort</option>
+						<option value="Merge">Merge Sort</option>
+						<option value="Selection">Selection Sort</option>
+					</select>
+					<div class="slide_container">
+						<div class="slide">
+							Speed
+
+							<input
+								type="range"
+								min="100"
+								max="1000"
+								value="500"
+								class="slider"
+								id="speed_slider"
+							/>
+						</div>
 					</div>
-				</div>
-				<div>
-					Size
-					<div class="slidecontainer">
-						<input
-							type="range"
-							min="10"
-							max="1000"
-							value="500"
-							class="slider"
-							id="size_slider"
-							step="100"
-						/>
+					<div class="slide_container">
+						<div class="slide">
+							Size
+							<input
+								type="range"
+								min="10"
+								max="1000"
+								value="500"
+								class="slider"
+								id="size_slider"
+								step="100"
+							/>
+						</div>
 					</div>
+					<script>
+						defineSizeSlider();
+					</script>
+					<button type="button" onclick="generateRandomArray()">
+						Generate Array
+					</button>
+					<button
+						type="button"
+						id="sort_button"
+						onclick="algorithmSelection()"
+					>
+						Sort
+						<div class="sort_status" id="sort_status">
+							not_sorted
+						</div>
+					</button>
 				</div>
-				<script>
-					defineSizeSlider();
-				</script>
-				<button type="button" onclick="generateRandomArray()">
-					Generate Array
-				</button>
-				<button
-					type="button"
-					id="sort_button"
-					onclick="algorithmSelection()"
-				>
-					Sort
-					<div class="sort_status" id="sort_status">not_sorted</div>
-				</button>
 			</div>
 
 			<div class="rectangles_container" id="rectangles_container"></div>
