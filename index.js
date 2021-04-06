@@ -151,14 +151,15 @@ function finishSorting() {
 function generateRandomArray() {
 	let array = [];
 	const size = document.getElementById('size_slider').value;
+	const maxSize = parseInt(document.getElementById('size_slider').max);
 
 	stopSorting();
 
 	for (let i = 0; i < size; i++) {
 		array.push(
 			`<div id="${i}" class="rectangle" style="height: ${
-				1 + 1 * i
-			}px"></div>`
+				(10 + 10 * i) * (75 / size)
+			}px; width: ${maxSize / size}%"></div>`
 		);
 	}
 
