@@ -27,7 +27,7 @@ async function switchRectangles(
 	compared_element,
 	check = true
 ) {
-	let swap = 0;
+	let swap = false;
 	if (
 		check &&
 		parseInt(selected_element.id) <= parseInt(compared_element.id)
@@ -44,15 +44,12 @@ async function switchRectangles(
 
 		selected_element.style.height = tmp_height;
 		selected_element.id = tmp_id;
-		swap = 1;
+		swap = true;
 	}
 
-	if (await wait()) {
-		return -1;
-	} else {
-		removeLastClass(compared_element);
-		return swap;
-	}
+	await wait();
+	removeLastClass(compared_element);
+	return swap;
 }
 
 function removeLastClass(element) {
@@ -63,11 +60,11 @@ function removeLastClass(element) {
 
 async function wait() {
 	if (checkStopSorting()) {
-		return true;
+		throw 'Error';
 	}
 	await sleep(5000 / parseInt(document.getElementById('speed_slider').value));
 	if (checkStopSorting()) {
-		return true;
+		throw 'Error';
 	}
 	return false;
 }
@@ -134,22 +131,24 @@ async function algorithmSelection() {
 	let rectangles_array = document.getElementsByClassName('rectangle');
 
 	startSorting();
-	switch (algorithm) {
-		case 'Bubble':
-			await bubbleSort(rectangles_array);
-			break;
-		case 'Merge':
-			await mergeSort(rectangles_array, 0, rectangles_array.length);
-			break;
-		case 'Quick':
-			await quickSort(rectangles_array, 0, rectangles_array.length);
-			break;
-		case 'Selection':
-			await selectionSort(rectangles_array);
-			break;
-		default:
-			break;
-	}
+	try {
+		switch (algorithm) {
+			case 'Bubble':
+				await bubbleSort(rectangles_array);
+				break;
+			case 'Merge':
+				await mergeSort(rectangles_array, 0, rectangles_array.length);
+				break;
+			case 'Quick':
+				await quickSort(rectangles_array, 0, rectangles_array.length);
+				break;
+			case 'Selection':
+				await selectionSort(rectangles_array);
+				break;
+			default:
+				break;
+		}
+	} catch {}
 	finishSorting();
 }
 
@@ -159,19 +158,13 @@ async function bubbleSort(rectangles_array) {
 	let swap = true;
 	let iterations = 0;
 
-	while (swap == true) {
+	while (swap) {
 		swap = false;
 		for (let i = 0; i < rectangles_array.length - 1 - iterations; i++) {
 			let selected_element = rectangles_array[i];
 			selected_element.classList.add('selected_element');
 			let compared_element = rectangles_array[i + 1];
-			result = await switchRectangles(selected_element, compared_element);
-
-			if (result == -1) {
-				return 0;
-			} else if (result == 1) {
-				swap = true;
-			}
+			swap = await switchRectangles(selected_element, compared_element);
 			removeLastClass(selected_element);
 		}
 		iterations += 1;
@@ -225,10 +218,7 @@ async function merge(rectangles_array, begin, middle, end) {
 	for (let index = begin; index < end; index++) {
 		const selected_element = rectangles_array[index];
 		selected_element.classList.add('selected_element');
-		if (await wait()) {
-			removeLastClass(selected_element);
-			return true;
-		}
+		await wait();
 		const correct_element = correct_order[index - begin];
 		selected_element.style.height = correct_element.height;
 		selected_element.id = correct_element.id;
@@ -243,10 +233,7 @@ async function mergeSort(rectangles_array, begin, end) {
 
 		await mergeSort(rectangles_array, begin, middle);
 		await mergeSort(rectangles_array, middle, end);
-		result = await merge(rectangles_array, begin, middle, end);
-		if (result === true) {
-			return true;
-		}
+		await merge(rectangles_array, begin, middle, end);
 	}
 	return false;
 }
@@ -269,23 +256,13 @@ async function partition(rectangles_array, begin, end) {
 			correctPivotIndex++;
 			const compared_element2 = rectangles_array[correctPivotIndex];
 
-			result = await switchRectangles(
-				compared_element,
-				compared_element2,
-				false
-			);
-			if (result === -1) {
-				throw 'Error';
-			}
+			await switchRectangles(compared_element, compared_element2, false);
 		}
 	}
 	compared_element = rectangles_array[correctPivotIndex + 1];
 
-	result = await switchRectangles(selected_element, compared_element, false);
+	await switchRectangles(selected_element, compared_element, false);
 
-	if (result === -1) {
-		throw 'Error';
-	}
 	removeLastClass(selected_element);
 
 	return correctPivotIndex + 1;
@@ -293,12 +270,10 @@ async function partition(rectangles_array, begin, end) {
 
 async function quickSort(rectangles_array, begin, end) {
 	if (begin < end - 1) {
-		try {
-			const pivotIndex = await partition(rectangles_array, begin, end);
+		const pivotIndex = await partition(rectangles_array, begin, end);
 
-			await quickSort(rectangles_array, begin, pivotIndex);
-			await quickSort(rectangles_array, pivotIndex + 1, end);
-		} catch {}
+		await quickSort(rectangles_array, begin, pivotIndex);
+		await quickSort(rectangles_array, pivotIndex + 1, end);
 	}
 }
 
@@ -311,12 +286,7 @@ async function selectionSort(rectangles_array) {
 
 		for (let j = i + 1; j < rectangles_array.length; j++) {
 			let compared_element = rectangles_array[j];
-			if (
-				(await switchRectangles(selected_element, compared_element)) ==
-				-1
-			) {
-				return 0;
-			}
+			await switchRectangles(selected_element, compared_element);
 		}
 		removeLastClass(selected_element);
 	}
