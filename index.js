@@ -105,12 +105,14 @@ function generateRandomArray() {
 		document.documentElement.clientHeight ||
 		document.body.clientHeight;
 
+	const heightAdjust = size + windowHeight;
+
 	stopSorting();
 
 	for (let i = 0; i < size; i++) {
 		array.push(
 			`<div id="${i}" class="rectangle" style="height: ${
-				(10 + 10 * i) * 45000 * (1 / size) * (1 / windowHeight)
+				(10 + 10 * i) * 45000 * (1 / heightAdjust)
 			}px; width: ${maxSize / size}%"></div>`
 		);
 	}

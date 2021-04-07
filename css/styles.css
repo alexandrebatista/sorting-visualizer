@@ -6,6 +6,7 @@ select {
 	font-size: large;
 	color: white;
 	outline: none;
+	background-color: rgb(0, 51, 102);
 }
 
 select:active {
