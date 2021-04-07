@@ -164,7 +164,9 @@ async function bubbleSort(rectangles_array) {
 			let selected_element = rectangles_array[i];
 			selected_element.classList.add('selected_element');
 			let compared_element = rectangles_array[i + 1];
-			swap = await switchRectangles(selected_element, compared_element);
+			if (await switchRectangles(selected_element, compared_element)) {
+				swap = true;
+			}
 			removeLastClass(selected_element);
 		}
 		iterations += 1;
@@ -247,7 +249,7 @@ async function partition(rectangles_array, begin, end) {
 	selected_element.classList.add('selected_element');
 
 	let correctPivotIndex = begin - 1;
-	let compared_element, result;
+	let compared_element;
 
 	for (let index = begin; index < end - 1; index++) {
 		let compared_element = rectangles_array[index];
