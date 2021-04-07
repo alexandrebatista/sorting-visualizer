@@ -22,9 +22,16 @@ function sleep(ms) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function switchRectangles(selected_element, compared_element) {
+async function switchRectangles(
+	selected_element,
+	compared_element,
+	check = true
+) {
 	let swap = 0;
-	if (parseInt(selected_element.id) <= parseInt(compared_element.id)) {
+	if (
+		check &&
+		parseInt(selected_element.id) <= parseInt(compared_element.id)
+	) {
 		compared_element.classList.add('compared_element');
 	} else {
 		compared_element.classList.add('disordered_element');
@@ -50,63 +57,6 @@ async function switchRectangles(selected_element, compared_element) {
 
 function removeLastClass(element) {
 	element.classList.remove(element.classList[element.classList.length - 1]);
-}
-
-async function merge(rectangles_array, begin, middle, end) {
-	let correct_order = [];
-
-	for (
-		let index_first_half = begin, index_second_half = middle;
-		index_first_half < middle || index_second_half < end;
-
-	) {
-		if (index_first_half < middle && index_second_half < end) {
-			if (
-				parseInt(rectangles_array[index_first_half].id) <
-				parseInt(rectangles_array[index_second_half].id)
-			) {
-				correct_order.push({
-					id: rectangles_array[index_first_half].id,
-					height: rectangles_array[index_first_half].style.height,
-				});
-				index_first_half++;
-			} else {
-				correct_order.push({
-					id: rectangles_array[index_second_half].id,
-					height: rectangles_array[index_second_half].style.height,
-				});
-				index_second_half++;
-			}
-		} else {
-			if (index_first_half < middle) {
-				correct_order.push({
-					id: rectangles_array[index_first_half].id,
-					height: rectangles_array[index_first_half].style.height,
-				});
-				index_first_half++;
-			} else {
-				correct_order.push({
-					id: rectangles_array[index_second_half].id,
-					height: rectangles_array[index_second_half].style.height,
-				});
-				index_second_half++;
-			}
-		}
-	}
-
-	for (let index = begin; index < end; index++) {
-		const selected_element = rectangles_array[index];
-		selected_element.classList.add('selected_element');
-		if (await wait()) {
-			removeLastClass(selected_element);
-			return true;
-		}
-		const correct_element = correct_order[index - begin];
-		selected_element.style.height = correct_element.height;
-		selected_element.id = correct_element.id;
-		removeLastClass(selected_element);
-	}
-	return false;
 }
 
 // Sorting Waiting Control
@@ -191,6 +141,9 @@ async function algorithmSelection() {
 		case 'Merge':
 			await mergeSort(rectangles_array, 0, rectangles_array.length);
 			break;
+		case 'Quick':
+			await quickSort(rectangles_array, 0, rectangles_array.length);
+			break;
 		case 'Selection':
 			await selectionSort(rectangles_array);
 			break;
@@ -199,6 +152,8 @@ async function algorithmSelection() {
 	}
 	finishSorting();
 }
+
+// Bubble Sort -----------------------------------------------------
 
 async function bubbleSort(rectangles_array) {
 	let swap = true;
@@ -223,6 +178,65 @@ async function bubbleSort(rectangles_array) {
 	}
 }
 
+// Merge Sort -----------------------------------------------------
+
+async function merge(rectangles_array, begin, middle, end) {
+	let correct_order = [];
+
+	for (
+		let index_first_half = begin, index_second_half = middle;
+		index_first_half < middle || index_second_half < end;
+
+	) {
+		if (index_first_half < middle && index_second_half < end) {
+			if (
+				parseInt(rectangles_array[index_first_half].id) <
+				parseInt(rectangles_array[index_second_half].id)
+			) {
+				correct_order.push({
+					id: rectangles_array[index_first_half].id,
+					height: rectangles_array[index_first_half].style.height,
+				});
+				index_first_half++;
+			} else {
+				correct_order.push({
+					id: rectangles_array[index_second_half].id,
+					height: rectangles_array[index_second_half].style.height,
+				});
+				index_second_half++;
+			}
+		} else {
+			if (index_first_half < middle) {
+				correct_order.push({
+					id: rectangles_array[index_first_half].id,
+					height: rectangles_array[index_first_half].style.height,
+				});
+				index_first_half++;
+			} else {
+				correct_order.push({
+					id: rectangles_array[index_second_half].id,
+					height: rectangles_array[index_second_half].style.height,
+				});
+				index_second_half++;
+			}
+		}
+	}
+
+	for (let index = begin; index < end; index++) {
+		const selected_element = rectangles_array[index];
+		selected_element.classList.add('selected_element');
+		if (await wait()) {
+			removeLastClass(selected_element);
+			return true;
+		}
+		const correct_element = correct_order[index - begin];
+		selected_element.style.height = correct_element.height;
+		selected_element.id = correct_element.id;
+		removeLastClass(selected_element);
+	}
+	return false;
+}
+
 async function mergeSort(rectangles_array, begin, end) {
 	if (end - begin > 1) {
 		const middle = parseInt((begin + end) / 2);
@@ -236,6 +250,59 @@ async function mergeSort(rectangles_array, begin, end) {
 	}
 	return false;
 }
+
+// Quick Sort -----------------------------------------------------
+
+async function partition(rectangles_array, begin, end) {
+	const pivot = rectangles_array[end - 1];
+
+	const selected_element = pivot;
+	selected_element.classList.add('selected_element');
+
+	let correctPivotIndex = begin - 1;
+	let compared_element, result;
+
+	for (let index = begin; index < end - 1; index++) {
+		let compared_element = rectangles_array[index];
+
+		if (parseInt(compared_element.id) < parseInt(selected_element.id)) {
+			correctPivotIndex++;
+			const compared_element2 = rectangles_array[correctPivotIndex];
+
+			result = await switchRectangles(
+				compared_element,
+				compared_element2,
+				false
+			);
+			if (result === -1) {
+				throw 'Error';
+			}
+		}
+	}
+	compared_element = rectangles_array[correctPivotIndex + 1];
+
+	result = await switchRectangles(selected_element, compared_element, false);
+
+	if (result === -1) {
+		throw 'Error';
+	}
+	removeLastClass(selected_element);
+
+	return correctPivotIndex + 1;
+}
+
+async function quickSort(rectangles_array, begin, end) {
+	if (begin < end - 1) {
+		try {
+			const pivotIndex = await partition(rectangles_array, begin, end);
+
+			await quickSort(rectangles_array, begin, pivotIndex);
+			await quickSort(rectangles_array, pivotIndex + 1, end);
+		} catch {}
+	}
+}
+
+// Selection Sort -----------------------------------------------------
 
 async function selectionSort(rectangles_array) {
 	for (let i = 0; i < rectangles_array.length; i++) {
