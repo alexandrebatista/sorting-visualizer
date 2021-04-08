@@ -186,34 +186,59 @@ async function merge(rectangles_array, begin, middle, end) {
 
 	) {
 		if (index_first_half < middle && index_second_half < end) {
+			rectangles_array[index_first_half].classList.add(
+				'selected_element'
+			);
 			if (
 				parseInt(rectangles_array[index_first_half].id) <
 				parseInt(rectangles_array[index_second_half].id)
 			) {
+				rectangles_array[index_second_half].classList.add(
+					'compared_element'
+				);
 				correct_order.push({
 					id: rectangles_array[index_first_half].id,
 					height: rectangles_array[index_first_half].style.height,
 				});
+				await wait();
+				removeLastClass(rectangles_array[index_first_half]);
+				removeLastClass(rectangles_array[index_second_half]);
 				index_first_half++;
 			} else {
+				rectangles_array[index_second_half].classList.add(
+					'disordered_element'
+				);
 				correct_order.push({
 					id: rectangles_array[index_second_half].id,
 					height: rectangles_array[index_second_half].style.height,
 				});
+				await wait();
+				removeLastClass(rectangles_array[index_first_half]);
+				removeLastClass(rectangles_array[index_second_half]);
 				index_second_half++;
 			}
 		} else {
 			if (index_first_half < middle) {
+				rectangles_array[index_first_half].classList.add(
+					'selected_element'
+				);
 				correct_order.push({
 					id: rectangles_array[index_first_half].id,
 					height: rectangles_array[index_first_half].style.height,
 				});
+				await wait();
+				removeLastClass(rectangles_array[index_first_half]);
 				index_first_half++;
 			} else {
+				rectangles_array[index_second_half].classList.add(
+					'selected_element'
+				);
 				correct_order.push({
 					id: rectangles_array[index_second_half].id,
 					height: rectangles_array[index_second_half].style.height,
 				});
+				await wait();
+				removeLastClass(rectangles_array[index_second_half]);
 				index_second_half++;
 			}
 		}
@@ -255,13 +280,15 @@ async function partition(rectangles_array, begin, end) {
 
 	for (let index = begin; index < end - 1; index++) {
 		let compared_element = rectangles_array[index];
-
+		compared_element.classList.add('compared_element');
+		await wait();
 		if (parseInt(compared_element.id) < parseInt(selected_element.id)) {
 			correctPivotIndex++;
 			const compared_element2 = rectangles_array[correctPivotIndex];
 
 			await switchRectangles(compared_element, compared_element2, false);
 		}
+		removeLastClass(compared_element);
 	}
 	compared_element = rectangles_array[correctPivotIndex + 1];
 
