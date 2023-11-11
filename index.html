@@ -9,14 +9,14 @@
 	<body class="external_container">
 		<div class="center_row menu_container">
 			<div class="center_row menu">
-				<select id="algorithm">
+				<select id="algorithm" class="header_text">
 					<option value="Bubble">Bubble Sort</option>
 					<option value="Merge">Merge Sort</option>
 					<option value="Quick">Quick Sort</option>
 					<option value="Selection">Selection Sort</option>
 				</select>
 				<div class="slide_container">
-					<div class="slide">
+					<div class="header_text slide">
 						Speed
 
 						<input
@@ -30,7 +30,7 @@
 					</div>
 				</div>
 				<div class="slide_container">
-					<div class="slide">
+					<div class="header_text slide">
 						Size
 						<input
 							type="range"
@@ -46,12 +46,13 @@
 				<script>
 					defineSizeSlider();
 				</script>
-				<button type="button" onclick="generateRandomArray()">
+				<button type="button" class="header_text" onclick="generateRandomArray()">
 					Generate Array
 				</button>
 				<button
 					type="button"
 					id="sort_button"
+					class="header_text"
 					onclick="algorithmSelection()"
 				>
 					Sort

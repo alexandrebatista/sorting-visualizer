@@ -43,13 +43,13 @@ button:active {
 }
 
 .menu_container {
-	height: 80px;
+	height: 5vw;
 	background-color: rgb(0, 51, 102);
 }
 
 .menu {
 	justify-content: space-between;
-	width: 50%;
+	width: 60%;
 }
 
 .slide_container {
@@ -89,4 +89,20 @@ button:active {
 
 .disordered_element {
 	background-color: red;
+}
+
+.header_text {
+	font-size: 1.25vw;
+}
+
+@media screen and (max-width: 480px) {
+    /* Seletor para os componentes */
+    .menu_container {
+		height: 20vw;
+	}
+
+	.external_container {
+		font-size: 50px;
+	}
+	
 }
